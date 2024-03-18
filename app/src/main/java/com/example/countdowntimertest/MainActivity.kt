@@ -34,8 +34,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val countDown = timerViewModel.countDownTimer.collectAsState()
-                    var endTime by remember { mutableLongStateOf(SystemClock.uptimeMillis()) }
-                    CountDownScreen(countDown = countDown.value)
+                    val endTime by remember { mutableLongStateOf(SystemClock.uptimeMillis()) }
+                    CountDownScreen(seconds = countDown.value.toInt(),
+                        endMillis = endTime)
                 }
             }
         }

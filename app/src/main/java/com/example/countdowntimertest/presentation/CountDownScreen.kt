@@ -11,17 +11,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.countdowntimertest.ui.theme.Count_Down_Color
+import com.example.countdowntimertest.state.animateFloatAsState
 import com.example.countdowntimertest.ui.theme.Screen_BG
 import com.example.countdowntimertest.ui.theme.Title_Color
+import com.example.countdowntimertest.utils.getTimeParts
+import kotlin.math.ceil
 
 @Composable
-fun CountDownScreen(countDown: Long) {
+fun CountDownScreen(seconds: Int,
+                    endMillis: Long,) {
+    val animatedSeconds by animateFloatAsState(key = endMillis, targetValue = seconds.toFloat())
+
+    val currentSeconds = ceil(animatedSeconds).toInt()
+    val nextSeconds = currentSeconds - 1
+    val factor = currentSeconds.toFloat() - animatedSeconds
+    val currentParts = getTimeParts(currentSeconds)
+    val nextParts = getTimeParts(nextSeconds)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,11 +59,12 @@ fun CountDownScreen(countDown: Long) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "8",
-                    fontSize = 24.sp,
-                    color = Count_Down_Color
+                FlipView(
+                    currentText = currentParts.days.toString().padStart(2, '0'),
+                    nextText = nextParts.days.toString().padStart(2, '0'),
+                    factor = if (currentParts.days == nextParts.days) 0F else factor
                 )
+
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = "Days", fontSize = 16.sp, color = Title_Color)
             }
@@ -63,10 +76,10 @@ fun CountDownScreen(countDown: Long) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "23",
-                    fontSize = 24.sp,
-                    color = Count_Down_Color
+                FlipView(
+                    currentText = currentParts.hours.toString().padStart(2, '0'),
+                    nextText = nextParts.hours.toString().padStart(2, '0'),
+                    factor = if (currentParts.hours == nextParts.hours) 0F else factor
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = "Hours", fontSize = 16.sp, color = Title_Color)
@@ -78,10 +91,10 @@ fun CountDownScreen(countDown: Long) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "59",
-                    fontSize = 24.sp,
-                    color = Count_Down_Color
+                FlipView(
+                    currentText = currentParts.minutes.toString().padStart(2, '0'),
+                    nextText = nextParts.minutes.toString().padStart(2, '0'),
+                    factor = if (currentParts.minutes == nextParts.minutes) 0F else factor
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = "Minutes", fontSize = 16.sp, color = Title_Color)
@@ -93,10 +106,10 @@ fun CountDownScreen(countDown: Long) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "59",
-                    fontSize = 24.sp,
-                    color = Count_Down_Color
+                FlipView(
+                    currentText = currentParts.seconds.toString().padStart(2, '0'),
+                    nextText = nextParts.seconds.toString().padStart(2, '0'),
+                    factor = if (currentParts.seconds == nextParts.seconds) 0F else factor
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = "Seconds", fontSize = 16.sp, color = Title_Color)
